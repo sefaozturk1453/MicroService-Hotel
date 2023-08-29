@@ -9,6 +9,6 @@ namespace Hotel.Models
         public string Name { get; set; }
         public string Surname { get; set; }
         public string Title { get; set; }
-        public ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+        
     }
 }

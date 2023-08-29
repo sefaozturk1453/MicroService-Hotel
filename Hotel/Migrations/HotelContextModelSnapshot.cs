@@ -25,17 +25,11 @@ namespace Hotel.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("CompetentId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("HotelId")
+                    b.Property<Guid>("HotelId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("Info")
                         .HasColumnType("text");
-
-                    b.Property<Guid>("OfficialId")
-                        .HasColumnType("uuid");
 
                     b.Property<int>("Type")
                         .HasColumnType("integer");
@@ -43,8 +37,6 @@ namespace Hotel.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("HotelId");
-
-                    b.HasIndex("OfficialId");
 
                     b.ToTable("Contacts");
                 });
@@ -129,17 +121,11 @@ namespace Hotel.Migrations
                 {
                     b.HasOne("Hotel.Models.Hotel", "Hotel")
                         .WithMany("Contacts")
-                        .HasForeignKey("HotelId");
-
-                    b.HasOne("Hotel.Models.Official", "Official")
-                        .WithMany("Contacts")
-                        .HasForeignKey("OfficialId")
+                        .HasForeignKey("HotelId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Hotel");
-
-                    b.Navigation("Official");
                 });
 
             modelBuilder.Entity("Hotel.Models.ReportDetail", b =>
@@ -154,11 +140,6 @@ namespace Hotel.Migrations
                 });
 
             modelBuilder.Entity("Hotel.Models.Hotel", b =>
-                {
-                    b.Navigation("Contacts");
-                });
-
-            modelBuilder.Entity("Hotel.Models.Official", b =>
                 {
                     b.Navigation("Contacts");
                 });

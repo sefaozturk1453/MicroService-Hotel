@@ -51,9 +51,7 @@ namespace Hotel.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    CompetentId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OfficialId = table.Column<Guid>(type: "uuid", nullable: false),
-                    HotelId = table.Column<Guid>(type: "uuid", nullable: true),
+                    HotelId = table.Column<Guid>(type: "uuid", nullable: false),
                     Type = table.Column<int>(type: "integer", nullable: false),
                     Info = table.Column<string>(type: "text", nullable: true)
                 },
@@ -64,12 +62,6 @@ namespace Hotel.Migrations
                         name: "FK_Contacts_Hotels_HotelId",
                         column: x => x.HotelId,
                         principalTable: "Hotels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Contacts_Officials_OfficialId",
-                        column: x => x.OfficialId,
-                        principalTable: "Officials",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -101,11 +93,6 @@ namespace Hotel.Migrations
                 column: "HotelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contacts_OfficialId",
-                table: "Contacts",
-                column: "OfficialId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ReportDetails_ReportRequestId",
                 table: "ReportDetails",
                 column: "ReportRequestId");
@@ -117,13 +104,13 @@ namespace Hotel.Migrations
                 name: "Contacts");
 
             migrationBuilder.DropTable(
+                name: "Officials");
+
+            migrationBuilder.DropTable(
                 name: "ReportDetails");
 
             migrationBuilder.DropTable(
                 name: "Hotels");
-
-            migrationBuilder.DropTable(
-                name: "Officials");
 
             migrationBuilder.DropTable(
                 name: "ReportRequests");
