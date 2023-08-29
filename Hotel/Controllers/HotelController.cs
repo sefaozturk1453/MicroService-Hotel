@@ -8,6 +8,10 @@ using Hotel.DTOs;
 using Hotel.Helpers;
 using Hotel.Models;
 using System.Collections.Generic;
+using MassTransit.Transports;
+using Microsoft.EntityFrameworkCore;
+using Shared;
+using Shared.Events;
 
 namespace Hotel.Controllers
 {
@@ -16,10 +20,12 @@ namespace Hotel.Controllers
     public class HotelController : Controller
     {
         private readonly HotelContext _context;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public HotelController(HotelContext context)
+        public HotelController(HotelContext context, IPublishEndpoint publishEndpoint)
         {
             _context = context;
+            _publishEndpoint = publishEndpoint;
         }
 
         [HttpPost("AddHotel")]
@@ -142,11 +148,69 @@ namespace Hotel.Controllers
             return Task.FromResult<IActionResult>(Ok(responseDto));
         }
 
+        [HttpGet("GetLocationReport")]
+        public async Task<IActionResult> GetLocationReport()
+        {
+            var requestReport = new ReportRequest()
+            {
+                Id = Guid.NewGuid(),
+                CreatedDate = DateTime.Now,
+                Status = (byte)StatusType.Preparing
+            };
+
+            await _context.AddAsync(requestReport);
+            await _context.SaveChangesAsync();
 
 
+            var personInformationList = await _context.Contacts.Where(x=>x.Type != InfoType.EMail).ToListAsync();
+
+            var reportCreatedEvent = new ReportCreatedEvent();
+
+            personInformationList.ForEach(item =>
+            {
+                reportCreatedEvent.HotelInformations.Add(new HotelInformationMessage() { Type = (byte)item.Type, Info = item.Info, HotelId = item.HotelId });
+            });
+
+            reportCreatedEvent.RequestId = requestReport.Id;
 
 
-        //Otellerin bulundukları konuma göre istatistiklerini çıkartan bir rapor talebi
+            await _publishEndpoint.Publish(reportCreatedEvent);
+
+            return Ok();
+        }
+
+        [HttpGet("GetReportList")]
+        public async Task<IActionResult> GetReportList()
+        {
+
+            var reports = await _context.ReportRequests.ToListAsync();
+
+            var response = new List<ReportRequestResponseDto>();
+
+            reports.ForEach(item =>
+            {
+                response.Add(new ReportRequestResponseDto() { Id = item.Id, CreatedDate = item.CreatedDate, Status = ((StatusType)item.Status).ToString() });
+            });
+
+            return Ok(response);
+        }
+
+        [HttpGet("GetReportDetail")]
+        public async Task<IActionResult> GetReportDetail(Guid id)
+        {
+
+            var reports = await _context.ReportDetails.Where(x => x.ReportRequestId == id).ToListAsync();
+
+            var response = new List<ReportDetail>();
+
+            reports.ForEach(item =>
+            {
+                response.Add(new ReportDetail() { Id = item.Id, Location = item.Location, HotelCount = item.HotelCount, NumberCount = item.NumberCount });
+            });
+
+            return Ok(response);
+        }
+
 
         //    Sistemin oluşturduğu raporların listelenmesi
 

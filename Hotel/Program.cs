@@ -20,10 +20,16 @@ namespace Hotel
             using (var scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<HotelContext>();
-                context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Sefa", Surname = "Öztürk", Title = "Müdür"});
-                context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Cengiz", Surname = "Veli", Title = "Müdür" });
-                context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Oðuz", Surname = "Kurt", Title = "Müdür" });
-                context.SaveChanges();
+
+                if (context.Officials.Count()<3)
+                {
+                    context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Sefa", Surname = "Öztürk", Title = "Müdür" });
+                    context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Cengiz", Surname = "Veli", Title = "Müdür" });
+                    context.Officials.Add(new Official() { Id = Guid.NewGuid(), Name = "Oðuz", Surname = "Kurt", Title = "Müdür" });
+                    context.SaveChanges();
+                }
+
+               
             }
 
             host.Run();

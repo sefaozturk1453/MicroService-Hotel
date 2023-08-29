@@ -36,4 +36,11 @@ namespace Hotel.DTOs
         public Guid Id { get; set; }
         public List<HotelContactResDto> Contacts { get; set; } = new List<HotelContactResDto>();
     }
+
+    public class ReportRequestResponseDto
+    {
+        public Guid Id { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public string Status { get; set; }
+    }
 }

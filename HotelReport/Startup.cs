@@ -1,9 +1,7 @@
-using Hotel.Models.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,11 +11,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Hotel.Consumer;
+using HotelReport.Consumers;
 using MassTransit;
 using Shared;
 
-namespace Hotel
+namespace HotelReport
 {
     public class Startup
     {
@@ -31,30 +29,27 @@ namespace Hotel
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMassTransit(options => {
+            services.AddMassTransit(options =>
+            {
 
-                options.AddConsumer<ReportCompletedEventConsumer>();
-
+                options.AddConsumer<ReportCreatedEventConsumer>();
 
                 options.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host(Configuration.GetConnectionString("RabitMQ"));
-                    cfg.ReceiveEndpoint(RabbitMQSettingsConst.ReportRequestCompletedEventQueueName, e =>
+
+                    cfg.ReceiveEndpoint(RabbitMQSettingsConst.DirectoryReportCreatedEventQueueName, e =>
                     {
-                        e.ConfigureConsumer<ReportCompletedEventConsumer>(context);
+                        e.ConfigureConsumer<ReportCreatedEventConsumer>(context);
                     });
                 });
 
-            });
-            services.AddDbContext<HotelContext>(options =>
-            {
-                options.UseNpgsql(Configuration.GetConnectionString("SqlCon"));
             });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Hotel", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelReport", Version = "v1" });
             });
         }
 
@@ -65,7 +60,7 @@ namespace Hotel
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelReport v1"));
             }
 
             app.UseHttpsRedirection();
