@@ -1,12 +1,12 @@
 
-# Rehber Raporlama
+# Otel Raporlama
 
 Birbirleri ile haberleşen minimum iki microservice'in olduğu bir yapıda, basit
 bir telefon rehberi uygulaması.
 
 ConnectionStrings bilgisi appsettings.json içinde tutulup gerekli tabloların veritabanına aktarımı için ayarlanmalıdır.
 
-Rehber işlemleri senkron çalışırken.
+Otel işlemleri senkron çalışırken.
 Rapor işlemleri asenkron olarak çalışmaktadır.
 
 Proje iki adet Web Api nin multiple startup olarak ayarlanarak açılmalıdır.
@@ -29,10 +29,10 @@ Proje iki adet Web Api nin multiple startup olarak ayarlanarak açılmalıdır.
 
 https://localhost:5001/swagger/index.html
 
-#### Kişi ekle
+#### Otel ekle
 
 ```http
-  POST /api/Directory/AddPerson
+  POST /api/Directory/AddHotel
 ```
 
 | Parametre -Tip     | Açıklama                |
@@ -43,10 +43,10 @@ https://localhost:5001/swagger/index.html
   "firma": "string"
 }`  | **Gerekli**. API anahtarınız. |
 
-#### Kişi sil
+#### Otel sil
 
 ```http
-  DELETE /api/Directory/DeletePerson/${guid}
+  DELETE /api/Directory/DeleteHotel/${guid}
 ```
 
 | Parametre | Tip     | Açıklama                       |
@@ -54,10 +54,10 @@ https://localhost:5001/swagger/index.html
 | `guid`      | `guid` | **Gerekli**. Çağrılacak öğenin anahtar değeri |
 
 
-#### Kişi için iletişim bilgisi ekle
+#### Otel için iletişim bilgisi ekle
 
 ```http
-  POST /api/Directory/AddPersonContact
+  POST /api/Directory/AddHotelContact
 ```
 
 | Parametre -Tip     | Açıklama                |
@@ -69,10 +69,10 @@ https://localhost:5001/swagger/index.html
 }`  | **Gerekli**. API anahtarınız. |
 
 
-#### Kişinin iletişim bilgisini sil
+#### Otel iletişim bilgisini sil
 
 ```http
-  DELETE /api/Directory/DeletePersonContact/${guid}
+  DELETE /api/Directory/DeleteHotelContact/${guid}
 ```
 
 | Parametre | Tip     | Açıklama                       |
@@ -80,16 +80,16 @@ https://localhost:5001/swagger/index.html
 | `guid`      | `guid` | **Gerekli**. Çağrılacak öğenin anahtar değeri |
 
 
-#### Bütün kişileri getir.
+#### Yetkili kişileri getir.
 
 ```http
-  GET /api/Directory/GetPersonList
+  GET /api/Directory/GetOfficialList
 ```
 
-#### Kişinin iletişim bilgisini getir
+#### Otellerin iletişim bilgisini getir
 
 ```http
-  GET /api/Directory/GetPersonContactList/${guid}
+  GET /api/Directory/GetHotelContactList/${guid}
 ```
 
 | Parametre | Tip     | Açıklama                       |
