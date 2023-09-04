@@ -38,9 +38,7 @@ https://localhost:5001/swagger/index.html
 | Parametre -Tip     | Açıklama                |
 | :--------  | :------------------------- |
 | `{
-  "ad": "string",
-  "soyad": "string",
-  "firma": "string"
+  "Name": "string"
 }`  | **Gerekli**. API anahtarınız. |
 
 #### Otel sil
@@ -63,7 +61,7 @@ https://localhost:5001/swagger/index.html
 | Parametre -Tip     | Açıklama                |
 | :--------  | :------------------------- |
 | `{
-  "personId": "b2303eea-4e5b-4ed3-9e80-5d524bbbdd3d",
+  "Id": "b2303eea-4e5b-4ed3-9e80-5d524bbbdd3d",
   "type": 0,
   "info": "string"
 }`  | **Gerekli**. API anahtarınız. |
